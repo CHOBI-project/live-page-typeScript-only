@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Ring, positionArray } from './torus_position';
 import { CommentArr, commentArray } from './message';
 import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js';
+import a from './assets/images/a.jpg';
+import light from './assets/images/light.png';
 
 const canvas: HTMLCanvasElement  = <HTMLCanvasElement>document.getElementById('canvas');
 const bt    : HTMLButtonElement  = <HTMLButtonElement>document.getElementById('bt');
@@ -61,7 +63,7 @@ function init() {
   orbit.enableDamping = true;
   orbit.dampingFactor = 0.02;
 
-  const texture = new THREE.TextureLoader().load("/images/a.jpg");
+  const texture = new THREE.TextureLoader().load(a);
   // const texture = new THREE.TextureLoader().load("./src/images/c.jpg")
 
   //Light
@@ -74,7 +76,7 @@ function init() {
   scene.add(spotLight);
 
   const lensFlare    = new Lensflare();
-  const lensTexture = new THREE.TextureLoader().load("/images/light.png");
+  const lensTexture = new THREE.TextureLoader().load(light);
   const lensColor   = new THREE.Color(0xffff00);
   lensFlare.addElement(new LensflareElement(lensTexture, 300, 0, lensColor));
   scene.add(lensFlare);
