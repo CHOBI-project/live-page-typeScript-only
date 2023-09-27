@@ -61,7 +61,7 @@ function init() {
   orbit.enableDamping = true;
   orbit.dampingFactor = 0.02;
 
-  const texture = new THREE.TextureLoader().load("./src/images/a.jpg");
+  const texture = new THREE.TextureLoader().load("./public/images/a.jpg");
   // const texture = new THREE.TextureLoader().load("./src/images/c.jpg")
 
   //Light
@@ -74,7 +74,7 @@ function init() {
   scene.add(spotLight);
 
   const lensFlare    = new Lensflare();
-  const lensTexture = new THREE.TextureLoader().load("./src/images/light.png");
+  const lensTexture = new THREE.TextureLoader().load("./public/images/light.png");
   const lensColor   = new THREE.Color(0xffff00);
   lensFlare.addElement(new LensflareElement(lensTexture, 300, 0, lensColor));
   scene.add(lensFlare);
