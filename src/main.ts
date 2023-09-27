@@ -3,8 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Ring, positionArray } from './torus_position';
 import { CommentArr, commentArray } from './message';
 import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js';
-import a from './assets/images/a.jpg';
-import light from './assets/images/light.png';
+import a from './images/a.jpg';
+import light from './images/light.png';
 
 const canvas: HTMLCanvasElement  = <HTMLCanvasElement>document.getElementById('canvas');
 const bt    : HTMLButtonElement  = <HTMLButtonElement>document.getElementById('bt');
