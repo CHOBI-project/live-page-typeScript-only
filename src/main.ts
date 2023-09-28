@@ -2,9 +2,14 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Ring, positionArray } from './torus_position';
 import { CommentArr, commentArray } from './message';
-import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js';
-import a from './images/a.jpg';
-import light from './images/light.png';
+
+//torusのtexture
+import a from './images/a.jpg'; //
+import b from './images/b.jpg'; //レンガ
+import c from './images/c.jpg'; //
+import d from './images/d.jpg'; //三角図形
+import e from './images/e.jpg'; //網目状1
+import f from './images/f.jpg'; //網目状2
 
 const canvas: HTMLCanvasElement  = <HTMLCanvasElement>document.getElementById('canvas');
 const bt    : HTMLButtonElement  = <HTMLButtonElement>document.getElementById('bt');
@@ -12,6 +17,7 @@ const latOut: HTMLSpanElement    = <HTMLSpanElement>document.getElementById('lat
 const lngOut: HTMLSpanElement    = <HTMLSpanElement>document.getElementById('lng');
 const timer : HTMLDivElement     = <HTMLDivElement>document.getElementById('timer');
 const commentBox: HTMLDivElement = <HTMLDivElement>document.getElementById('commentBox');
+const lastUpdate: HTMLDivElement = <HTMLDivElement>document.getElementById('last-update');
 
 function init() {
 
@@ -29,8 +35,9 @@ function init() {
 
 
   //timer
-  function setTimer() {
+  function timeData() {
     const date         = new Date();
+    const year         = date.getFullYear();
     const month        = date.getMonth() + 1;
     const day          = date.getDate();
     const hour         = date.getHours().toString().padStart(2, "0");
@@ -40,8 +47,11 @@ function init() {
     const dayListJa    = ['日', '月', '火', '水', '木', '金', '土'];
   
     timer.innerHTML = `${month}/${day}(${dayListJa[dayOfTheWeek]}) ${hour}:${minute}:${second}`;
+
+    const dateList = { year, month, day, hour, minute, second };
+    return dateList;
   }
-  setInterval(setTimer, 1000);
+  setInterval(timeData, 1000);
 
 
   //three.js初期化
@@ -52,8 +62,8 @@ function init() {
   let camera:   THREE.PerspectiveCamera;
   let renderer: THREE.WebGLRenderer;
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, width / heihgt, 0.1, 2000);
+  scene    = new THREE.Scene();
+  camera   = new THREE.PerspectiveCamera(75, width / heihgt, 0.1, 2000);
   renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true});
   renderer.setClearColor(new THREE.Color(0x000000));
   renderer.setSize(width, heihgt);
@@ -63,10 +73,8 @@ function init() {
   orbit.enableDamping = true;
   orbit.dampingFactor = 0.02;
 
-  const texture = new THREE.TextureLoader().load(a);
-  // const texture = new THREE.TextureLoader().load("./src/images/c.jpg")
 
-  //Light
+  //ambiLight
   const ambiLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambiLight);
 
@@ -75,23 +83,22 @@ function init() {
   spotLight.position.y = 10;
   scene.add(spotLight);
 
-  const lensFlare    = new Lensflare();
-  const lensTexture = new THREE.TextureLoader().load(light);
-  const lensColor   = new THREE.Color(0xffff00);
-  lensFlare.addElement(new LensflareElement(lensTexture, 300, 0, lensColor));
-  scene.add(lensFlare);
-  lensFlare.position.copy(spotLight.position);
-  lensFlare.position.y = 5;
-
-
   //helper
   const cameraHelper = new THREE.CameraHelper(camera);
   scene.add(cameraHelper);
+
+
+  //torusTexture未決定
+  // const texture = new THREE.TextureLoader().load(a);
+  const texture = new THREE.TextureLoader().load(b);
+  // const texture = new THREE.TextureLoader().load(c);
+  // const texture = new THREE.TextureLoader().load(d);
+  // const texture = new THREE.TextureLoader().load(e);
+  // const texture = new THREE.TextureLoader().load(f);
+
   //-----------------------------------------------------------------------------
   
-  let rX, rY: number;
   let shufflePosition: Ring[];
-  let randomPosition: Ring;
   let num = 0;
 
 
@@ -111,76 +118,38 @@ function init() {
 
   //add TorusGeometry
   function createTorus(): void {
-    const randColor = new THREE.Color(`hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`);
-    const torusGeometry = new THREE.TorusGeometry(5, 1.5, 8, 50);
+    const randColor     = new THREE.Color(`hsl(${Math.floor(Math.random() * 361)}, 100%, 50%)`);
+    const torusGeometry = new THREE.TorusGeometry(5.5, 1.5, 8, 50);
     const torusMaterial = new THREE.MeshBasicMaterial({
       color: randColor,
-      map: texture, 
+      map: texture,
     });
-    const torus         = new THREE.Mesh(torusGeometry, torusMaterial);
+    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
     torus.scale.set(0.08, 0.08, 0.08);
-
-    const pos = shufflePosition.pop();
-    console.log(pos);
-    
-    if (!pos) { return; }
-    randomPosition = pos;
-    torus.position.set(randomPosition.positionX, randomPosition.positionY, 0);
-    
-    
-    if (num % 2 == 0) {                   //偶数
-      rX = Math.floor(Math.random());
-      rY = Math.floor(Math.random());
-      torus.rotation.set(rX, rY, 0);
-    } else {                              //奇数
-      rX = Math.floor(Math.random() * 2); 
-      rY = Math.floor(Math.random() * 5);
-      torus.rotation.set(rX, rY, 0);
-    }
     scene.add(torus);
 
-    if (num == 71) {
-      shufflePosition = shuffleArray(positionArray);
-      randomPosition = pos;
-      num = 0;
-    }
-    createMessage();
+    const pos = shufflePosition.pop();
+    if (!pos) { return }
+    torus.position.set(pos.positionX, pos.positionY, 0);
+    torus.rotation.set(pos.rotateX,   pos.rotateY, 0);
+
+    /*reduxを使わないでリングをすべて表示させた次のアクション時
+      ・配列に新しくシャッフルしたtorus情報を格納し、一つだけは取り出し表示しておく
+    */
+    lastUpdate.innerHTML = `最終更新日時: ${timeData().year}.${timeData().month}.${timeData().day}.${timeData().hour}.${timeData().minute}.${timeData().second}`;
+
+    createMessage(num);
     num++;
   };
-
-
-  //後ろのパーティクルたち
-  function createParticle() {
-    const count = 3000;
-    const particleGeometry = new THREE.BufferGeometry();
-    const particleArray    = new Float32Array(count * 3); //x, y, z必要
-    const colorArray       = new Float32Array(count * 3);
-  
-    for (let i = 0; i < count * 3; i++ ) {
-      particleArray[i] = (Math.random() - 0.5) * 20;
-      colorArray[i]    = Math.random();
-    }
-  
-    const position = new THREE.BufferAttribute(particleArray, 3); //x, y, zの3つあるから[3]にする
-    particleGeometry.setAttribute('position', position);
-  
-    const color = new THREE.BufferAttribute(colorArray, 3);
-    particleGeometry.setAttribute('color', color);
-  
-    const particleMaterial = new THREE.PointsMaterial({size: 0.025, vertexColors: true});
-    const particle = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particle);
-  }
-  createParticle();
 
 
   //カメラのアップデート
   const clock = new THREE.Clock();
   function cameraUpdate() {
     const elapsedTime = clock.getElapsedTime(); //ブラウザを表示してからの経過時間
-    camera.position.x = Math.cos(elapsedTime * 0.5) * 5;
-    camera.position.y = -3.5;
-    camera.position.z = Math.sin(elapsedTime * 0.5) * 10;
+    camera.position.x = Math.cos(elapsedTime * 0.1) * 10;
+    camera.position.y = 0;
+    camera.position.z = Math.sin(elapsedTime * 0.1) * 10;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
   }
 
@@ -216,11 +185,11 @@ function init() {
   }
 
 
-  //コメントを飛ばしていく
+  //コメントを飛ばす
   const getComment: CommentArr = commentArray;
-  function createMessage() {
+  function createMessage(messageNum: number) {
     const comment = document.createElement('span');
-    comment.innerHTML = getComment[num];
+    comment.innerHTML = getComment[messageNum];
     
     comment.style.left = 0 + "%";
     comment.style.top  = (Math.random() * 85 + 5) + "%";

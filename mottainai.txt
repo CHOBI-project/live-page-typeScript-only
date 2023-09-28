@@ -1,0 +1,33 @@
+  // const lensFlare    = new Lensflare();
+  // const lensTexture = new THREE.TextureLoader().load(light);
+  // const lensColor   = new THREE.Color(0xffff00);
+  // lensFlare.addElement(new LensflareElement(lensTexture, 300, 0, lensColor));
+  // scene.add(lensFlare);
+  // lensFlare.position.copy(spotLight.position);
+  // lensFlare.position.y = 5;
+
+
+  
+  //後ろのパーティクルたち
+  // function createParticle() {
+  //   const count = 3000;
+  //   const particleGeometry = new THREE.BufferGeometry();
+  //   const particleArray    = new Float32Array(count * 3); //x, y, z必要
+  //   const colorArray       = new Float32Array(count * 3);
+  
+  //   for (let i = 0; i < count * 3; i++ ) {
+  //     particleArray[i] = (Math.random() - 0.5) * 20;
+  //     colorArray[i]    = Math.random();
+  //   }
+  
+  //   const position = new THREE.BufferAttribute(particleArray, 3); //x, y, zの3つあるから[3]にする
+  //   particleGeometry.setAttribute('position', position);
+  
+  //   const color = new THREE.BufferAttribute(colorArray, 3);
+  //   particleGeometry.setAttribute('color', color);
+  
+  //   const particleMaterial = new THREE.PointsMaterial({size: 0.025, vertexColors: true});
+  //   const particle = new THREE.Points(particleGeometry, particleMaterial);
+  //   scene.add(particle);
+  // }
+  // createParticle();
