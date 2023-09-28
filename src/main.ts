@@ -4,12 +4,12 @@ import { Ring, positionArray } from './torus_position';
 import { CommentArr, commentArray } from './message';
 
 //torusのtexture
-import a from './images/a.jpg'; //
+// import a from './images/a.jpg'; //
 import b from './images/b.jpg'; //レンガ
-import c from './images/c.jpg'; //
-import d from './images/d.jpg'; //三角図形
-import e from './images/e.jpg'; //網目状1
-import f from './images/f.jpg'; //網目状2
+// import c from './images/c.jpg'; //
+// import d from './images/d.jpg'; //三角図形
+// import e from './images/e.jpg'; //網目状1
+// import f from './images/f.jpg'; //網目状2
 
 const canvas: HTMLCanvasElement  = <HTMLCanvasElement>document.getElementById('canvas');
 const bt    : HTMLButtonElement  = <HTMLButtonElement>document.getElementById('bt');
